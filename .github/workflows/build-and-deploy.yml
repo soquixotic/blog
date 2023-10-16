@@ -32,4 +32,10 @@ jobs:
       run: pnpm run build
 
     - name: Deploy
-      run: pnpm run deploy
+      env:
+        MY_EMAIL: kevinzhan0417@outlook.com
+        MY_NAME: kevinzhan
+      run: 
+        git config --global user.email $MY_EMAIL
+        git config --global user.name $MY_NAME
+        pnpm run deploy
