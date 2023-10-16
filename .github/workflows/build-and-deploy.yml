@@ -32,10 +32,7 @@ jobs:
       run: pnpm run build
 
     - name: Deploy
-      env:
-        MY_EMAIL: kevinzhan0417@outlook.com
-        MY_NAME: kevinzhan
-      run: |
-        git config --global user.email $MY_EMAIL
-        git config --global user.name $MY_NAME
-        pnpm run deploy
+      uses: JamesIves/github-pages-deploy-action@4.1.1
+      with:
+        branch: gh-pages
+        folder: build
