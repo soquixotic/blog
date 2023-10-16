@@ -1,17 +1,18 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Homepage } from "./pages/home";
-import { CaboPage } from "./pages/cabo";
+import { CaboEntryPage } from "./pages/cabo";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/cabo" element={<CaboPage />} />
-      </Routes>
-    </BrowserRouter>
+    <div className="h-full w-full bg-gray-200">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/cabo" element={<CaboEntryPage />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 }
 
