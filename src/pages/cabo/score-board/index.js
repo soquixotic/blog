@@ -84,6 +84,7 @@ function CaboScoreBoard({ playerNum }) {
         className="w-full"
         columns={tableColumns}
         dataSource={dataSource}
+        scroll={{x: "max-content"}}
       ></Table>
     </Flex>
   );
