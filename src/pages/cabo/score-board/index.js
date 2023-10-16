@@ -96,9 +96,9 @@ const NewScoreModal = ({ playerNum, onOk, onCancel, open }) => {
     Array.from({ length: playerNum }).map((_, index) => {
       const playerID = `player_${index + 1}`;
       scores[playerID] = 0;
+      return 0;
     });
     setScores({ ...scores });
-    return 0;
   }, [playerNum]);
 
   const onNewScoreValueChanged = (id, value) => {
@@ -115,9 +115,9 @@ const NewScoreModal = ({ playerNum, onOk, onCancel, open }) => {
         Array.from({ length: playerNum }).map((_, index) => {
           const playerID = `player_${index + 1}`;
           scores[playerID] = 0;
+          return 0;
         });
         setScores({ ...scores });
-        return 0;
       }}
       title="Record new round score:"
     >
