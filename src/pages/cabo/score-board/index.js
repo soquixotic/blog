@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { Flex, Table, Button, Modal, Divider, InputNumber } from "antd";
 import { PLAYER_NUM_SUPPORT } from "../constant";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 export function CaboScoreBoardPage() {
   const [params] = useSearchParams();
