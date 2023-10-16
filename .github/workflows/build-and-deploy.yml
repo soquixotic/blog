@@ -18,6 +18,13 @@ jobs:
         node-version: "16"
         package-manager: "pnpm"
 
+    - name: Install Pnpm 
+      uses: pnpm/action-setup@v2
+      id: pnpm-install
+      with:
+        version: 8
+        run_install: true
+
     - name: Install dependencies
       run: pnpm install
 
