@@ -98,6 +98,7 @@ const NewScoreModal = ({ playerNum, onOk, onCancel, open }) => {
       scores[playerID] = 0;
     });
     setScores({ ...scores });
+    return 0;
   }, [playerNum]);
 
   const onNewScoreValueChanged = (id, value) => {
@@ -116,6 +117,7 @@ const NewScoreModal = ({ playerNum, onOk, onCancel, open }) => {
           scores[playerID] = 0;
         });
         setScores({ ...scores });
+        return 0;
       }}
       title="Record new round score:"
     >
