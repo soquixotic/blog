@@ -35,7 +35,7 @@ jobs:
       env:
         MY_EMAIL: kevinzhan0417@outlook.com
         MY_NAME: kevinzhan
-      run: 
+      run: |
         git config --global user.email $MY_EMAIL
         git config --global user.name $MY_NAME
         pnpm run deploy
