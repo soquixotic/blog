@@ -1,19 +1,24 @@
-import { Flex, Button } from "antd";
+import { Flex, Button, Divider } from "antd";
 import { useNavigate } from "react-router-dom";
 
 export function Homepage() {
   const navigate = useNavigate();
   return (
-    <Flex vertical className="justify-center items-center p-16 w-full h-full">
-      <h1>桌游列表</h1>
-      <Button
-        className="mt-16"
-        onClick={() => {
-          navigate("/cabo");
-        }}
+    <Flex className="justify-center items-center h-full">
+      <Flex
+        vertical
+        className="justify-center items-center p-8 border border-gray-600 w-72 border-solid"
       >
-        Cabo
-      </Button>
+        <h1 className="text-lg font-bold">桌游列表</h1>
+        <Divider />
+        <Button
+          onClick={() => {
+            navigate("/cabo");
+          }}
+        >
+          Cabo
+        </Button>
+      </Flex>
     </Flex>
   );
 }

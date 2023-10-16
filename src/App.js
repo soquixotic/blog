@@ -2,6 +2,7 @@ import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Homepage } from "./pages/home";
 import { CaboEntryPage } from "./pages/cabo";
+import { CaboScoreBoardPage } from "./pages/cabo/score-board";
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/cabo" element={<CaboEntryPage />} />
+          <Route path="/cabo/board" element={<CaboScoreBoardPage />} />
         </Routes>
       </BrowserRouter>
     </div>
