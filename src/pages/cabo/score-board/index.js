@@ -129,10 +129,11 @@ const NewScoreModal = ({ playerNum, onOk, onCancel, open }) => {
           const playerName = `Player ${index + 1}`;
           const score = playerScores[playerID] ?? 0;
           return (
-            <Flex key={playerID} className="items-center">
+            <Flex key={playerID} className="items-center text-base">
               {playerName}
               <InputNumber
                 className="ml-4"
+                type="number"
                 min={0}
                 max={50}
                 value={score}
