@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { Flex, Table, Button, Modal, Divider, InputNumber } from "antd";
 import { PLAYER_NUM_SUPPORT } from "../constant";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export function CaboScoreBoardPage() {
   const [params] = useSearchParams();
@@ -25,9 +25,10 @@ export function CaboScoreBoardPage() {
 function CaboScoreBoard({ playerNum }) {
   const tableColumns = [
     {
-      title: "Rounds",
+      title: "🦄",
       dataIndex: "round",
       key: "round",
+      width: 20,
     },
   ];
   const [dataSource, setDataSource] = useState([]);
@@ -36,7 +37,7 @@ function CaboScoreBoard({ playerNum }) {
   for (let index = 0; index < playerNum; index++) {
     const playerID = `player_${index + 1}`;
     tableColumns.push({
-      title: `Player ${index + 1}`,
+      title: `${index + 1}P`,
       dataIndex: playerID,
       key: playerID,
     });
@@ -84,7 +85,8 @@ function CaboScoreBoard({ playerNum }) {
         className="w-full"
         columns={tableColumns}
         dataSource={dataSource}
-        scroll={{x: "max-content"}}
+        scroll={{ x: "max-content" }}
+        pagination={false}
       ></Table>
     </Flex>
   );
@@ -92,15 +94,18 @@ function CaboScoreBoard({ playerNum }) {
 
 const NewScoreModal = ({ playerNum, onOk, onCancel, open }) => {
   const [playerScores, setScores] = useState({});
-  useEffect(() => {
+  const genEmptyScores = useCallback(() => {
     const scores = {};
     Array.from({ length: playerNum }).map((_, index) => {
       const playerID = `player_${index + 1}`;
       scores[playerID] = 0;
       return 0;
     });
-    setScores({ ...scores });
+    return scores;
   }, [playerNum]);
+  useEffect(() => {
+    setScores(genEmptyScores());
+  }, [genEmptyScores]);
 
   const onNewScoreValueChanged = (id, value) => {
     playerScores[id] = value;
@@ -112,13 +117,7 @@ const NewScoreModal = ({ playerNum, onOk, onCancel, open }) => {
       onCancel={onCancel}
       onOk={() => {
         onOk(playerScores);
-        const scores = {};
-        Array.from({ length: playerNum }).map((_, index) => {
-          const playerID = `player_${index + 1}`;
-          scores[playerID] = 0;
-          return 0;
-        });
-        setScores({ ...scores });
+        setScores(genEmptyScores());
       }}
       title="Record new round score:"
     >
