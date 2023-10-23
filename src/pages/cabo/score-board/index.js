@@ -22,6 +22,9 @@ export function CaboScoreBoardPage() {
   );
 }
 
+const { confirm } = Modal;
+
+
 function CaboScoreBoard({ playerNum }) {
   const tableColumns = [
     {
@@ -33,6 +36,34 @@ function CaboScoreBoard({ playerNum }) {
   ];
   const [dataSource, setDataSource] = useState([]);
   const [openScoreModal, setOpenScoreModal] = useState(false);
+  const [resultInfo, setResultInfo] = useState("");
+
+  useEffect(() => {
+    const scoreMap = {};
+    dataSource.forEach((record) => {
+      console.log(JSON.stringify(record));
+      Object.keys(record).forEach((item) => {
+        if (item === "round" || item === "key") {
+          return;
+        }
+        if (!scoreMap[item]) {
+          scoreMap[item] = 0;
+        }
+        scoreMap[item] += record[item];
+      })
+    })
+    let scoreInfo = "";
+    Object.keys(scoreMap).forEach((value, index) => {
+      const score = scoreMap[value];
+      scoreInfo += `${index+1}P:\t${score}`;
+      if (score > 40) {
+        scoreInfo +=  `\t(${100 - score} to 100)`;
+      }
+      scoreInfo += "\r\n";  
+    })
+
+    setResultInfo(scoreInfo);
+  }, [dataSource])
 
   for (let index = 0; index < playerNum; index++) {
     const playerID = `player_${index + 1}`;
@@ -58,6 +89,20 @@ function CaboScoreBoard({ playerNum }) {
     setOpenScoreModal(false);
   };
 
+  const onRevokeScore = () => {
+    dataSource.pop();
+    setDataSource([...dataSource]);
+  }
+
+  const onRestartGame = () => {
+    confirm({
+      content: "Are you sure to restart the game? ",
+      onOk() {
+        setDataSource([]);
+      }
+    })
+  }
+
   return (
     <Flex className="w-full h-full p-4" vertical>
       <h2 className="text-lg mb-4">Score board Actions</h2>
@@ -70,8 +115,12 @@ function CaboScoreBoard({ playerNum }) {
         >
           Record score
         </Button>
-        <Button type="default">Analyze</Button>
+        
+        {dataSource.length > 0 && <Button type="default" onClick={onRevokeScore}>Revoke</Button>}
+        {dataSource.length > 0 && <Button type="default" danger onClick={onRestartGame}>Restart</Button>}
+
       </Flex>
+      <pre className="mb-4  ">{resultInfo}</pre>  
       <NewScoreModal
         playerNum={playerNum}
         open={openScoreModal}
@@ -81,13 +130,13 @@ function CaboScoreBoard({ playerNum }) {
         }}
       />
 
-      <Table
+      {dataSource.length > 0 && <Table
         className="w-full"
         columns={tableColumns}
         dataSource={dataSource}
         scroll={{ x: "max-content" }}
         pagination={false}
-      ></Table>
+      ></Table>}
     </Flex>
   );
 }
