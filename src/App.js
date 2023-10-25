@@ -5,6 +5,7 @@ import { CaboEntryPage } from "./pages/cabo";
 import { AIEditorPage } from "./pages/ai-editor";
 import { CaboScoreBoardPage } from "./pages/cabo/score-board";
 
+
 function App() {
   return (
     <div className="h-full w-full bg-gray-200">
