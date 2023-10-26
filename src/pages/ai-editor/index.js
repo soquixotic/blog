@@ -5,6 +5,7 @@ import MdEditor from "react-markdown-editor-lite";
 // import style manually
 import "react-markdown-editor-lite/lib/index.css";
 import { Button, Flex } from "antd";
+import { getUserToken } from "../../utils/user";
 
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 
@@ -34,8 +35,7 @@ export function AIEditorPage() {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
-          Authorization:
-            "Bear eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImtldmluIiwid2lkIjoiMSIsImV4cCI6MTY5ODMwODM4M30.SolZal30n_PocpxBKAd6R-JZazFRnodG2poBi8iqC64",
+          Authorization: getUserToken(),
         },
         body: encodedData,
       })
