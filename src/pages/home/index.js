@@ -4,7 +4,7 @@ import { Space, message } from "antd";
 import { Flex, Button, Divider } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { configUserToken } from "../../utils/user";
+import { configUserToken, getUserToken } from "../../utils/user";
 
 export function Homepage() {
   const navigate = useNavigate();
@@ -19,6 +19,8 @@ export function Homepage() {
       setUsername("");
       setPassword("");
     }
+    const token = getUserToken();
+    setHasLoggedIn(token && token !== "");
   }, [openLogin]);
 
   const trySignIn = () => {
@@ -44,6 +46,7 @@ export function Homepage() {
           setOpenLogin(false);
           setHasLoggedIn(true);
           messageApi.success("Signed in: " + data.data.user.username);
+          navigate("/ai-editor");
           return;
         }
         messageApi.error("Error: " + data.message);
@@ -51,26 +54,16 @@ export function Homepage() {
   };
 
   return (
-    <Flex className="justify-center items-center h-full">
+    <Flex className={`justify-center items-center h-full`}>
       {contextHolder}
       <Flex
         vertical
-        className="justify-center items-center p-8 border border-gray-600 w-72 border-solid"
+        className="justify-center items-center p-8 border border-gray-600 w-72 border-solid bg-white bg-opacity-80"
       >
         <h1 className="text-lg font-bold">Function List</h1>
         <Divider />
 
         <Space direction="vertical" size={4} align="center">
-          <Button
-            disabled={hasLoggedIn}
-            className="w-24"
-            onClick={() => {
-              setOpenLogin(true);
-            }}
-          >
-            {hasLoggedIn ? "Signed in" : "Sign in"}
-          </Button>
-
           <Button
             className="w-24"
             onClick={() => {
@@ -82,6 +75,10 @@ export function Homepage() {
           <Button
             className="w-24"
             onClick={() => {
+              if (!hasLoggedIn) {
+                setOpenLogin(true);
+                return;
+              }
               navigate("/ai-editor");
             }}
           >

@@ -22,7 +22,7 @@ export function CaboEntryPage() {
       {contextHolder}
       <Flex
         vertical
-        className="justify-center items-center p-8 border border-gray-600 w-72 border-solid"
+        className="justify-center items-center p-8 border border-gray-600 w-72 border-solid bg-white bg-opacity-80"
       >
         <h1 className="text-lg font-bold">🦄 Cabo 🦄</h1>
         <Divider />

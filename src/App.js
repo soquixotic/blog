@@ -8,7 +8,7 @@ import { CaboScoreBoardPage } from "./pages/cabo/score-board";
 
 function App() {
   return (
-    <div className="h-full w-full bg-gray-200">
+    <div className="h-full w-full bg-blog bg-center bg-cover bg-no-repeat">
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Homepage />} />
