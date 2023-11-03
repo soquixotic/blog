@@ -40,6 +40,7 @@ function CaboScoreBoard({ playerNum }) {
 
   useEffect(() => {
     const scoreMap = {};
+    const discountMap = {};
     dataSource.forEach((record) => {
       console.log(JSON.stringify(record));
       Object.keys(record).forEach((item) => {
@@ -50,17 +51,27 @@ function CaboScoreBoard({ playerNum }) {
           scoreMap[item] = 0;
         }
         scoreMap[item] += record[item];
-      })
-    })
+        if (scoreMap[item] === 100) {
+          discountMap[item] = true;
+        }
+      });
+    });
     let scoreInfo = "";
     Object.keys(scoreMap).forEach((value, index) => {
-      const score = scoreMap[value];
-      scoreInfo += `${index+1}P:\t${score}`;
-      if (score > 40) {
-        scoreInfo +=  `\t(${100 - score} to 100)`;
+      const hasDiscount = discountMap[value];
+      const score = hasDiscount ? scoreMap[value] - 50 : scoreMap[value];
+
+      scoreInfo += `${index + 1}P:\t${score}`;
+      if (score > 50) {
+        scoreInfo += `\t(${100 - score} to 100)\t${
+          hasDiscount ? "with discount" : ""
+        }`;
       }
-      scoreInfo += "\r\n";  
-    })
+      if (score >= 100) {
+        scoreInfo += "(LOSE)";
+      }
+      scoreInfo += "\r\n";
+    });
 
     setResultInfo(scoreInfo);
   }, [dataSource])
