@@ -5,5 +5,5 @@ export function configUserToken(newToken) {
 }
 
 export function getUserToken() {
-  return userToken;
+  return userToken ?? "";
 }

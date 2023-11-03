@@ -4,14 +4,68 @@ import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
 // import style manually
 import "react-markdown-editor-lite/lib/index.css";
-import { Button, Flex } from "antd";
-import { getUserToken } from "../../utils/user";
+import { Button, Flex, message, Input, Modal } from "antd";
+import { useEffect } from "react";
+import { configUserToken, getUserToken } from "../../utils/user";
+import { useNavigate } from "react-router-dom";
 
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 
 export function AIEditorPage() {
   const [text, setText] = useState("");
   const [isWriting, setIsWriting] = useState(false);
+  const [openLogin, setOpenLogin] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [hasLoggedIn, setHasLoggedIn] = useState(getUserToken() !== "");
+  const [messageApi, contextHolder] = message.useMessage();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (openLogin === false) {
+      setUsername("");
+      setPassword("");
+    }
+    const token = getUserToken();
+    setHasLoggedIn(token && token !== "");
+  }, [openLogin]);
+
+  useEffect(() => {
+    if (!hasLoggedIn) {
+      setOpenLogin(true);
+    }
+  }, [hasLoggedIn]);
+
+  const trySignIn = () => {
+    const formData = { username: username, password: password };
+    var encodedData = Object.keys(formData)
+      .map(function (key) {
+        return (
+          encodeURIComponent(key) + "=" + encodeURIComponent(formData[key])
+        );
+      })
+      .join("&");
+    fetch("https://api.zymx.tech/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: encodedData,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.code === 0) {
+          configUserToken(data.data.token);
+          setOpenLogin(false);
+          setHasLoggedIn(true);
+          messageApi.success("Signed in: " + data.data.user.username);
+          // navigate("/ai-editor");
+          return;
+        }
+        messageApi.error("Error: " + data.message);
+      });
+  };
+
   const handleEditorChange = useCallback(({ _, text: newText }) => {
     console.log("handleEditorChange", newText);
     setText(newText);
@@ -93,8 +147,8 @@ export function AIEditorPage() {
   }
 
   return (
-    <Flex vertical className="w-full h-full p-4">
-      <h1>AI Editor</h1>
+    <Flex vertical className="w-full h-full p-4 min-h-screen">
+      {contextHolder}
       <Button
         className="w-fit mb-4"
         onClick={onContinueWriting}
@@ -104,12 +158,46 @@ export function AIEditorPage() {
       </Button>
 
       <MdEditor
-        style={{ height: "100%" }}
+        style={{ minHeight: "80vh" }}
         readOnly={isWriting}
         value={text}
         renderHTML={(text) => mdParser.render(text)}
         onChange={handleEditorChange}
       />
+      <Modal
+        centered
+        open={openLogin}
+        okText={"Sign in"}
+        onCancel={() => {
+          navigate("/");
+          setOpenLogin(false);
+        }}
+        onOk={() => {
+          trySignIn();
+        }}
+      >
+        <Flex vertical className="space-y-4 pt-8">
+          <Flex className="space-x-4">
+            <p className="w-20">Username</p>
+            <Input
+              value={username}
+              onChange={(value) => {
+                setUsername(value.target.value);
+              }}
+            />
+          </Flex>
+          <Flex className="space-x-4">
+            <p className="w-20">Password</p>
+            <Input
+              type="password"
+              value={password}
+              onChange={(value) => {
+                setPassword(value.target.value);
+              }}
+            />
+          </Flex>
+        </Flex>
+      </Modal>
     </Flex>
   );
 }

@@ -18,7 +18,7 @@ export function CaboEntryPage() {
     setPlayerNum(newNum);
   };
   return (
-    <Flex className="justify-center items-center h-full">
+    <Flex className="justify-center items-center h-full mt-20">
       {contextHolder}
       <Flex
         vertical

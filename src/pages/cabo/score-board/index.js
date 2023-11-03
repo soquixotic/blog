@@ -62,19 +62,20 @@ function CaboScoreBoard({ playerNum }) {
       const score = hasDiscount ? scoreMap[value] - 50 : scoreMap[value];
 
       scoreInfo += `${index + 1}P:\t${score}`;
-      if (score > 50) {
-        scoreInfo += `\t(${100 - score} to 100)\t${
-          hasDiscount ? "with discount" : ""
-        }`;
+      if (score >= 50) {
+        scoreInfo += `\t(${100 - score} to 100)`;
+      }
+      if (hasDiscount) {
+        scoreInfo += `\t(discount 50)`;
       }
       if (score >= 100) {
-        scoreInfo += "(LOSE)";
+        scoreInfo += "\t(LOSE)";
       }
       scoreInfo += "\r\n";
     });
 
     setResultInfo(scoreInfo);
-  }, [dataSource])
+  }, [dataSource]);
 
   for (let index = 0; index < playerNum; index++) {
     const playerID = `player_${index + 1}`;
@@ -103,16 +104,16 @@ function CaboScoreBoard({ playerNum }) {
   const onRevokeScore = () => {
     dataSource.pop();
     setDataSource([...dataSource]);
-  }
+  };
 
   const onRestartGame = () => {
     confirm({
       content: "Are you sure to restart the game? ",
       onOk() {
         setDataSource([]);
-      }
-    })
-  }
+      },
+    });
+  };
 
   return (
     <Flex className="w-full h-full p-4" vertical>
@@ -126,12 +127,19 @@ function CaboScoreBoard({ playerNum }) {
         >
           Record score
         </Button>
-        
-        {dataSource.length > 0 && <Button type="default" onClick={onRevokeScore}>Revoke</Button>}
-        {dataSource.length > 0 && <Button type="default" danger onClick={onRestartGame}>Restart</Button>}
 
+        {dataSource.length > 0 && (
+          <Button type="default" onClick={onRevokeScore}>
+            Revoke
+          </Button>
+        )}
+        {dataSource.length > 0 && (
+          <Button type="default" danger onClick={onRestartGame}>
+            Restart
+          </Button>
+        )}
       </Flex>
-      <pre className="mb-4  ">{resultInfo}</pre>  
+      <pre className="mb-4  ">{resultInfo}</pre>
       <NewScoreModal
         playerNum={playerNum}
         open={openScoreModal}
@@ -141,13 +149,15 @@ function CaboScoreBoard({ playerNum }) {
         }}
       />
 
-      {dataSource.length > 0 && <Table
-        className="w-full"
-        columns={tableColumns}
-        dataSource={dataSource}
-        scroll={{ x: "max-content" }}
-        pagination={false}
-      ></Table>}
+      {dataSource.length > 0 && (
+        <Table
+          className="w-full"
+          columns={tableColumns}
+          dataSource={dataSource}
+          scroll={{ x: "max-content" }}
+          pagination={false}
+        ></Table>
+      )}
     </Flex>
   );
 }
@@ -192,7 +202,7 @@ const NewScoreModal = ({ playerNum, onOk, onCancel, open }) => {
               {playerName}
               <InputNumber
                 className="ml-4"
-                type="number"
+                type="tel"
                 min={0}
                 max={50}
                 value={score}
