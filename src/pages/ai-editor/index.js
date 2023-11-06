@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 
-export function AIEditorPage() {
+export default function AIEditorPage() {
   const [text, setText] = useState("");
   const [isWriting, setIsWriting] = useState(false);
   const [openLogin, setOpenLogin] = useState(false);

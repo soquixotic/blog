@@ -1,26 +1,30 @@
-import { AIEditorPage } from "./pages/ai-editor";
-import { CaboEntryPage } from "./pages/cabo";
-import { CaboScoreBoardPage } from "./pages/cabo/score-board";
-import { ArticleList } from "./pages/article-list";
+import { Component } from "react";
+
+const AsyncArticleList = asyncComponent(() => import("./pages/article-list"));
+const AsyncAIEditorPage = asyncComponent(() => import("./pages/ai-editor"));
+const AsyncCaboEntryPage = asyncComponent(() => import("./pages/cabo"));
+const AsyncCaboScoreBoardPage = asyncComponent(() =>
+  import("./pages/cabo/score-board")
+);
 
 export const RouteMenuList = [
   {
     key: "home",
     name: "📚 Home",
     path: "/",
-    component: <ArticleList></ArticleList>,
+    component: <AsyncArticleList></AsyncArticleList>,
   },
   {
     key: "cabo",
     name: "🦄 Cabo",
     path: "/cabo",
-    component: <CaboEntryPage />,
+    component: <AsyncCaboEntryPage />,
   },
   {
     key: "ai-editor",
     name: "🤖 AI Editor",
     path: "/ai-editor",
-    component: <AIEditorPage />,
+    component: <AsyncAIEditorPage />,
   },
 ];
 
@@ -30,6 +34,31 @@ export const RouterPageList = [
     key: "cabo",
     name: "🦄 Cabo",
     path: "/cabo/board",
-    component: <CaboScoreBoardPage />,
+    component: <AsyncCaboScoreBoardPage />,
   },
 ];
+function asyncComponent(importComponent) {
+  class AsyncComponent extends Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        component: null,
+      };
+    }
+
+    componentDidMount() {
+      importComponent().then((mod) => {
+        this.setState({
+          component: mod.default ? mod.default : mod,
+        });
+      });
+    }
+
+    render() {
+      const C = this.state.component;
+      return C ? <C {...this.props} /> : null;
+    }
+  }
+
+  return AsyncComponent;
+}

@@ -3,7 +3,7 @@ import { Flex, Table, Button, Modal, Divider, InputNumber } from "antd";
 import { PLAYER_NUM_SUPPORT } from "../constant";
 import { useCallback, useEffect, useState } from "react";
 
-export function CaboScoreBoardPage() {
+export default function CaboScoreBoardPage() {
   const [params] = useSearchParams();
   const playerNum = params.get("playerNum");
 

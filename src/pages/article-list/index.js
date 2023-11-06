@@ -12,7 +12,7 @@ const data = [
   },
 ];
 
-export function ArticleList() {
+export default function ArticleList() {
   return (
     <div
       className="w-full h-full flex justify-center min-h-screen bg-white bg-opacity-60 rounded-xl"

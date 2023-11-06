@@ -4,9 +4,9 @@ import { NavLink } from "react-router-dom";
 import { withRouter } from "../../utils/router.js";
 
 function TopMenu(props) {
-  const selectedKey = RouterPageList.find(
-    (item) => item.path === props.selectedKeys[0]
-  ).key;
+  const selectedKey =
+    RouterPageList.find((item) => item.path === props.selectedKeys[0])?.key ??
+    "home";
   return (
     <Menu
       className="w-full flex justify-start"

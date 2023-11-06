@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PLAYER_NUM_SUPPORT } from "./constant";
 
-export function CaboEntryPage() {
+export default function CaboEntryPage() {
   const [openNewRoom, setOpenNewRoom] = useState(false);
   const [playerNum, setPlayerNum] = useState(4);
   const [messageApi, contextHolder] = message.useMessage();
