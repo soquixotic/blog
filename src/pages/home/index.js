@@ -1,7 +1,7 @@
 import { Flex, Layout } from "antd";
 import { useEffect, useState } from "react";
 
-import SideMenu from "./menu";
+import TopMenu from "./menu";
 import { Main } from "./main";
 import { withRouter } from "../../utils/router";
 import { useLocation } from "react-router-dom";
@@ -17,15 +17,27 @@ function Homepage() {
   }, [location]);
 
   return (
-    <Flex className={`items-center h-full w-full`} vertical>
+    <Flex
+      className={`items-center h-full w-full`}
+      vertical
+      style={{ minWidth: "375px" }}
+    >
       <Layout style={{ minHeight: "100vh" }} className="w-full">
-        <Header style={{ backgroundColor: "white" }}>
-          <SideMenu selectedKeys={selectedKeys} />
+        <Header
+          style={{ backgroundColor: "white", padding: "0", minWidth: "375px" }}
+          className="flex justify-center fixed w-full z-10"
+        >
+          <div
+            style={{ maxWidth: "750px", minWidth: "375px" }}
+            className="w-full"
+          >
+            <TopMenu selectedKeys={selectedKeys} className="w-full" />
+          </div>
         </Header>
-        <Layout>
+        <Layout className="mt-16">
           <Content
             style={{ padding: "12px", overflow: "initial" }}
-            className="bg-blog bg-center bg-no-repeat bg-cover"
+            className="bg-blog bg-center bg-no-repeat bg-cover flex justify-center"
           >
             <Main />
           </Content>
