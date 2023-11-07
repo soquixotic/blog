@@ -6,6 +6,9 @@ const AsyncCaboEntryPage = asyncComponent(() => import("./pages/cabo"));
 const AsyncCaboScoreBoardPage = asyncComponent(() =>
   import("./pages/cabo/score-board")
 );
+const AsyncArticleDetailPage = asyncComponent(() =>
+  import("./pages/article-detail")
+);
 
 export const RouteMenuList = [
   {
@@ -35,6 +38,12 @@ export const RouterPageList = [
     name: "🦄 Cabo",
     path: "/cabo/board",
     component: <AsyncCaboScoreBoardPage />,
+  },
+  {
+    key: "home",
+    name: "Home",
+    path: "/article",
+    component: <AsyncArticleDetailPage />,
   },
 ];
 function asyncComponent(importComponent) {

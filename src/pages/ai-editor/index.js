@@ -8,16 +8,18 @@ import { Button, Flex, message, Input, Modal } from "antd";
 import { useEffect } from "react";
 import { configUserToken, getUserToken } from "../../utils/user";
 import { useNavigate } from "react-router-dom";
-
+import { createDraft, updateDraft, publishArticle } from "./repo";
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 
 export default function AIEditorPage() {
   const [text, setText] = useState("");
-  const [isWriting, setIsWriting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [openLogin, setOpenLogin] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [hasLoggedIn, setHasLoggedIn] = useState(getUserToken() !== "");
+  const [article, setArticle] = useState({});
+
   const [messageApi, contextHolder] = message.useMessage();
   const navigate = useNavigate();
 
@@ -66,10 +68,14 @@ export default function AIEditorPage() {
       });
   };
 
-  const handleEditorChange = useCallback(({ _, text: newText }) => {
-    console.log("handleEditorChange", newText);
-    setText(newText);
-  }, []);
+  const handleEditorChange = useCallback(
+    ({ _, text: newText }) => {
+      article.content = newText;
+      setText(newText);
+      setArticle({ ...article });
+    },
+    [article]
+  );
 
   async function onContinueWriting() {
     const url = "https://api.zymx.tech/gpt/continue-write";
@@ -83,7 +89,7 @@ export default function AIEditorPage() {
         );
       })
       .join("&");
-    setIsWriting(true);
+    setIsLoading(true);
     try {
       fetch(url, {
         method: "POST",
@@ -120,7 +126,7 @@ export default function AIEditorPage() {
           function processStream({ done, value }) {
             if (done) {
               console.log("Stream complete");
-              setIsWriting(false);
+              setIsLoading(false);
               return;
             }
 
@@ -138,7 +144,7 @@ export default function AIEditorPage() {
           reader.read().then(processStream);
         })
         .catch((error) => {
-          setIsWriting(false);
+          setIsLoading(false);
           console.error("Error:", error);
         });
     } catch (err) {
@@ -146,20 +152,100 @@ export default function AIEditorPage() {
     }
   }
 
+  async function onSaveDraft() {
+    setIsLoading(true);
+    let isCreate = true;
+    if (article.id !== undefined) {
+      isCreate = false;
+    }
+
+    try {
+      if (isCreate) {
+        await createDraft(article, (id) => {
+          article.id = id;
+          setArticle({ ...article });
+        });
+      } else {
+        await updateDraft(article, (id) => {
+          article.id = id;
+          setArticle({ ...article });
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setIsLoading(false);
+  }
+
+  async function onPublish() {
+    setIsLoading(true);
+    try {
+      await publishArticle(article, (articleId) => {
+        article.article_id = articleId;
+        setArticle({ ...article });
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    setIsLoading(false);
+  }
+
   return (
     <Flex vertical className="w-full h-full p-4 min-h-screen">
       {contextHolder}
-      <Button
-        className="w-fit mb-4"
-        onClick={onContinueWriting}
-        loading={isWriting}
-      >
-        Continue writing
-      </Button>
+      <Flex className="mb-4 justify-between">
+        <Button
+          className="w-fit mr-4"
+          onClick={onContinueWriting}
+          loading={isLoading}
+        >
+          Continue writing
+        </Button>
+        <Flex>
+          <Button
+            className="w-fit mr-4"
+            onClick={onSaveDraft}
+            loading={isLoading}
+          >
+            Save Draft
+          </Button>
+          <Button className="w-fit" onClick={onPublish} loading={isLoading}>
+            Publish
+          </Button>
+        </Flex>
+      </Flex>
 
+      <Flex className="mb-4" vertical>
+        <label className="mr-4 mb-2 font-semibold">Title: </label>
+        <Input
+          className=""
+          onChange={(e) => {
+            article.title = e.target.value;
+          }}
+          onBlur={() => {
+            setArticle({ ...article });
+            console.log(article);
+          }}
+        ></Input>
+      </Flex>
+
+      <Flex className="mb-4" vertical>
+        <label className="mr-4 mb-2 font-semibold">Brief: </label>
+        <Input.TextArea
+          rows={4}
+          onChange={(e) => {
+            article.brief = e.target.value;
+          }}
+          onBlur={() => {
+            setArticle({ ...article });
+          }}
+        />
+      </Flex>
+
+      <label className="mr-4 mb-2 font-semibold">Content: </label>
       <MdEditor
         style={{ minHeight: "80vh" }}
-        readOnly={isWriting}
+        readOnly={isLoading}
         value={text}
         renderHTML={(text) => mdParser.render(text)}
         onChange={handleEditorChange}

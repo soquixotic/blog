@@ -10,7 +10,7 @@ module.exports = {
     fontSize: {
       base: ["16px", "24px"],
       sm: [
-        "14px",
+        "12px",
         {
           lineHeight: "20px",
         },

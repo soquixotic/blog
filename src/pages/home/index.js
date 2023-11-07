@@ -24,8 +24,8 @@ function Homepage() {
     >
       <Layout style={{ minHeight: "100vh" }} className="w-full">
         <Header
-          style={{ backgroundColor: "white", padding: "0", minWidth: "375px" }}
-          className="flex justify-center fixed w-full z-10"
+          style={{ padding: "0", minWidth: "375px" }}
+          className="flex justify-center fixed w-full z-10 bg-gray-50"
         >
           <div
             style={{ maxWidth: "750px", minWidth: "375px" }}
@@ -36,10 +36,18 @@ function Homepage() {
         </Header>
         <Layout className="mt-16">
           <Content
-            style={{ padding: "12px", overflow: "initial" }}
-            className="bg-blog bg-center bg-no-repeat bg-cover flex justify-center"
+            style={{
+              padding: "0px",
+              overflow: "initial",
+            }}
+            className="bg-blog bg-center bg-no-repeat bg-cover flex justify-center "
           >
-            <Main />
+            <div
+              style={{ maxWidth: "750px", minWidth: "375px" }}
+              className="w-full bg-white bg-opacity-50"
+            >
+              <Main style={{}} />
+            </div>
           </Content>
         </Layout>
       </Layout>
