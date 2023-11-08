@@ -28,11 +28,13 @@ export function ArticleCard({ article }) {
       className="flex h-36 bg-white items-center w-full rounded-xl hover:cursor-pointer shadow-xl overflow-hidden justify-between"
       onClick={onClickCard}
     >
-      <div className="flex flex-col h-full mr-2 p-2">
-        <div className="font-bold mb-2 line-clamp-1 text-base">
-          {article.title}
+      <div className="flex flex-col h-full mr-2 p-2 justify-between">
+        <div className="flex flex-col">
+          <div className="font-bold mb-2 line-clamp-1 text-base">
+            {article.title}
+          </div>
+          <div className="line-clamp-3 text-base mb-2">{article.brief}</div>
         </div>
-        <div className="line-clamp-3 text-base mb-2">{article.brief}</div>
         <div className="line-clamp-1 font-light text-sm">{formattedDate}</div>
       </div>
       <Image
