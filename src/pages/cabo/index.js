@@ -18,11 +18,11 @@ export default function CaboEntryPage() {
     setPlayerNum(newNum);
   };
   return (
-    <Flex className="justify-center items-center h-full mt-20">
+    <Flex className="justify-center h-screen mt-20">
       {contextHolder}
       <Flex
         vertical
-        className="justify-center items-center p-8 border border-gray-600 w-72 border-solid bg-white bg-opacity-80"
+        className=" items-center p-8 border border-gray-600 w-72 border-solid bg-white bg-opacity-80 h-fit"
       >
         <h1 className="text-lg font-bold">🦄 Cabo 🦄</h1>
         <Divider />

@@ -1,9 +1,13 @@
-var userToken = "";
+var userData = {};
 
-export function configUserToken(newToken) {
-  userToken = "Bear " + newToken;
+export function configUserData(data) {
+  userData = data;
 }
 
 export function getUserToken() {
-  return userToken ?? "";
+  return "Bear " + userData.token ?? "";
+}
+
+export function getUserInfo() {
+  return userData.user ?? {};
 }

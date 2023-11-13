@@ -11,7 +11,6 @@ const { Header, Content } = Layout;
 function Homepage() {
   const [selectedKeys, setSelectedKeys] = useState([]);
   const location = useLocation();
-
   useEffect(() => {
     setSelectedKeys([location.pathname]);
   }, [location]);
@@ -56,38 +55,3 @@ function Homepage() {
 }
 
 export default withRouter(Homepage);
-
-/*
-
-      <Flex
-        vertical
-        className="justify-center items-center p-8 border border-gray-600 w-72 border-solid bg-white bg-opacity-80"
-      >
-        <h1 className="text-lg font-bold">Function List</h1>
-        <Divider />
-
-        <Space direction="vertical" size={4} align="center">
-          <Button
-            className="w-24"
-            onClick={() => {
-              navigate("/cabo");
-            }}
-          >
-            Cabo
-          </Button>
-          <Button
-            className="w-24"
-            onClick={() => {
-              if (!hasLoggedIn) {
-                setOpenLogin(true);
-                return;
-              }
-              navigate("/ai-editor");
-            }}
-          >
-            AI Editor
-          </Button>
-        </Space>
-      </Flex>
-
-*/

@@ -6,19 +6,22 @@ import MdEditor from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
 import { Button, Flex, message, Input, Modal } from "antd";
 import { useEffect } from "react";
-import { configUserToken, getUserToken } from "../../utils/user";
-import { useNavigate } from "react-router-dom";
-import { createDraft, updateDraft, publishArticle } from "./repo";
+import { configUserData, getUserToken, getUserInfo } from "../../utils/user";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { createDraft, updateDraft, publishArticle, fetchArticle } from "./repo";
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 
 export default function AIEditorPage() {
-  const [text, setText] = useState("");
+  const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [openLogin, setOpenLogin] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [hasLoggedIn, setHasLoggedIn] = useState(getUserToken() !== "");
   const [article, setArticle] = useState({});
+  const [params] = useSearchParams();
+
+  const articleId = params.get("id");
 
   const [messageApi, contextHolder] = message.useMessage();
   const navigate = useNavigate();
@@ -28,9 +31,24 @@ export default function AIEditorPage() {
       setUsername("");
       setPassword("");
     }
-    const token = getUserToken();
-    setHasLoggedIn(token && token !== "");
-  }, [openLogin]);
+    const userInfo = getUserInfo();
+    setHasLoggedIn(userInfo.id !== undefined);
+    if (articleId && hasLoggedIn) {
+      fetchArticle(articleId).then((result) => {
+        console.log(result);
+        if (result.code === 0) {
+          // set article
+          const article = result.data.article;
+          if (userInfo.id === article.user_id) {
+            article.id = article.draft_id;
+            article.article_id = articleId;
+            setArticle(article);
+            setContent(article.content);
+          }
+        }
+      });
+    }
+  }, [openLogin, articleId, hasLoggedIn]);
 
   useEffect(() => {
     if (!hasLoggedIn) {
@@ -57,7 +75,7 @@ export default function AIEditorPage() {
       .then((res) => res.json())
       .then((data) => {
         if (data.code === 0) {
-          configUserToken(data.data.token);
+          configUserData(data.data);
           setOpenLogin(false);
           setHasLoggedIn(true);
           messageApi.success("Signed in: " + data.data.user.username);
@@ -71,7 +89,7 @@ export default function AIEditorPage() {
   const handleEditorChange = useCallback(
     ({ _, text: newText }) => {
       article.content = newText;
-      setText(newText);
+      setContent(newText);
       setArticle({ ...article });
     },
     [article]
@@ -80,8 +98,8 @@ export default function AIEditorPage() {
   async function onContinueWriting() {
     const url = "https://api.zymx.tech/gpt/continue-write";
     const decoder = new TextDecoder("utf-8");
-    const textArr = [text];
-    const formData = { prev_text: text };
+    const textArr = [content];
+    const formData = { prev_text: content };
     var encodedData = Object.keys(formData)
       .map(function (key) {
         return (
@@ -135,7 +153,7 @@ export default function AIEditorPage() {
             console.log("Received:", contentStr);
             textArr.push(contentStr);
 
-            setText(textArr.join(""));
+            setContent(textArr.join(""));
 
             // 继续读取下一块数据
             reader.read().then(processStream);
@@ -183,6 +201,7 @@ export default function AIEditorPage() {
       await publishArticle(article, (articleId) => {
         article.article_id = articleId;
         setArticle({ ...article });
+        navigate("/article?id=" + articleId);
       });
     } catch (error) {
       console.log(error);
@@ -206,10 +225,16 @@ export default function AIEditorPage() {
             className="w-fit mr-4"
             onClick={onSaveDraft}
             loading={isLoading}
+            disabled={article.title === undefined}
           >
             Save Draft
           </Button>
-          <Button className="w-fit" onClick={onPublish} loading={isLoading}>
+          <Button
+            className="w-fit"
+            onClick={onPublish}
+            loading={isLoading}
+            disabled={article.id === undefined}
+          >
             Publish
           </Button>
         </Flex>
@@ -221,11 +246,9 @@ export default function AIEditorPage() {
           className=""
           onChange={(e) => {
             article.title = e.target.value;
-          }}
-          onBlur={() => {
             setArticle({ ...article });
-            console.log(article);
           }}
+          value={article.title}
         ></Input>
       </Flex>
 
@@ -235,10 +258,9 @@ export default function AIEditorPage() {
           rows={4}
           onChange={(e) => {
             article.brief = e.target.value;
-          }}
-          onBlur={() => {
             setArticle({ ...article });
           }}
+          value={article.brief}
         />
       </Flex>
 
@@ -246,7 +268,7 @@ export default function AIEditorPage() {
       <MdEditor
         style={{ minHeight: "80vh" }}
         readOnly={isLoading}
-        value={text}
+        value={content}
         renderHTML={(text) => mdParser.render(text)}
         onChange={handleEditorChange}
       />

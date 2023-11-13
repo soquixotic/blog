@@ -22,16 +22,22 @@ export async function updateDraft(article, onGetID) {
 
 export async function publishArticle(article, onGetArticleID) {
   const url = "https://api.zymx.tech/draft/publish";
-  const resp = await fetchWithAuth(url, {
-    draft_id: article.id,
-    title: article.title,
-  });
+  article.draft_id = article.id;
+  const resp = await fetchWithAuth(url, article);
   const result = await resp.json();
   console.log(result);
   if (result.code === 0) {
     onGetArticleID(result.data.article_id);
   }
 }
+
+export async function fetchArticle(id) {
+  const url = "https://api.zymx.tech/article/get?id=" + id;
+  const response = await fetch(url);
+  const result = await response.json();
+  return result;
+}
+
 
 async function fetchWithAuth(url, bodyJson) {
   return await fetch(url, {
