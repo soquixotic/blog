@@ -1,0 +1,15 @@
+/* Reset some default styles */
+
+h1 {
+  font-size: 2em;
+}
+
+h2 {
+  font-size: 1.5em;
+  padding-top: 12px;
+}
+
+p {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}

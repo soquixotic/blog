@@ -6,6 +6,7 @@ import { timeFormat } from "../../utils/format";
 import { getUserToken } from "../../utils/user";
 import { useNavigate } from "react-router-dom";
 import { Spin } from "antd";
+import "./index.css";
 
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 
