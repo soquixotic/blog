@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { fetchArticle } from "./repo";
 import MarkdownIt from "markdown-it";
 import { timeFormat } from "../../utils/format";
-import { getUserToken } from "../../utils/user";
+import { getUserInfo } from "../../utils/user";
 import { useNavigate } from "react-router-dom";
 import { Spin } from "antd";
 import "./index.css";
@@ -14,7 +14,8 @@ export default function ArticleDetailPage() {
   const [params] = useSearchParams();
   const articleId = params.get("id");
   const [article, setArticle] = useState({});
-  const hasLoggedIn = getUserToken() !== "";
+  const hasLoggedIn = getUserInfo().id !== undefined;
+
   const navigate = useNavigate();
 
   useEffect(() => {
