@@ -33,7 +33,11 @@ export default function ArticleDetailPage() {
     navigate("/ai-editor?id=" + article.id);
   };
   if (article.id === undefined) {
-    return <Spin />;
+    return (
+      <div className="w-full h-48 flex items-center justify-center">
+        <Spin />
+      </div>
+    );
   }
 
   return (
