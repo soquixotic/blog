@@ -9,7 +9,7 @@ function TopMenu(props) {
     "home";
   return (
     <Menu
-      className="w-full flex justify-start bg-gray-50"
+      className="w-full flex justify-start bg-opacity-0"
       selectedKeys={[selectedKey]}
       mode="horizontal"
       items={RouteMenuList.map((item) => {

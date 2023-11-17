@@ -24,28 +24,29 @@ function Homepage() {
       <Layout style={{ minHeight: "100vh" }} className="w-full">
         <Header
           style={{ padding: "0", minWidth: "375px" }}
-          className="flex justify-center fixed w-full z-10 bg-gray-50"
+          className="flex justify-center fixed w-full z-10 bg-gray-50 bg-opacity-0"
         >
           <div
             style={{ maxWidth: "750px", minWidth: "375px" }}
-            className="w-full"
+            className="w-full bg-opacity-0"
           >
             <TopMenu selectedKeys={selectedKeys} className="w-full" />
           </div>
         </Header>
-        <Layout className="mt-16">
+        <Layout className="h-screen overflow-hidden">
           <Content
             style={{
               padding: "0px",
+              paddingTop: "64px",
               overflow: "initial",
             }}
-            className="bg-blog bg-center bg-no-repeat bg-cover flex justify-center "
+            className="bg-blog bg-center bg-no-repeat bg-cover flex justify-center"
           >
             <div
               style={{ maxWidth: "750px", minWidth: "375px" }}
               className="w-full bg-white bg-opacity-50"
             >
-              <Main style={{}} />
+              <Main style={{ overflow: "auto" }} />
             </div>
           </Content>
         </Layout>

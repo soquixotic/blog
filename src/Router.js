@@ -9,6 +9,7 @@ const AsyncCaboScoreBoardPage = asyncComponent(() =>
 const AsyncArticleDetailPage = asyncComponent(() =>
   import("./pages/article-detail")
 );
+const AsyncCashTrackPage = asyncComponent(() => import("./pages/cash-track"));
 
 export const RouteMenuList = [
   {
@@ -29,6 +30,12 @@ export const RouteMenuList = [
     path: "/ai-editor",
     component: <AsyncAIEditorPage />,
   },
+  {
+    key: "cash-track",
+    name: "💰Cash Tracker",
+    path: "/cash-track",
+    component: <AsyncCashTrackPage />,
+  },
 ];
 
 export const RouterPageList = [
@@ -46,6 +53,8 @@ export const RouterPageList = [
     component: <AsyncArticleDetailPage />,
   },
 ];
+
+
 function asyncComponent(importComponent) {
   class AsyncComponent extends Component {
     constructor(props) {
