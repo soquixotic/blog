@@ -38,19 +38,21 @@ export default function CashTrackPage() {
         </div>
       </div>
       <div className="font-bold mb-1 text-lg">Accounts</div>
-      <div className="w-full rounded-lg bg-white bg-opacity-80 p-2 flex space-x-2 mb-4">
-        {accounts.map((item) => (
-          <AccountCard
-            account={item}
-            onAccountUpdated={() => updateFamilyAccounts()}
-          />
-        ))}
-        <div className="flex flex-col w-28 h-28 bg-blue-100 bg-opacity-80 rounded-lg p-2 items-center justify-center space-y-2">
-          <AccountModal
-            onAccountCreated={(_) => {
-              updateFamilyAccounts();
-            }}
-          />
+      <div className="overflow-x-auto h-48 bg-white bg-opacity-80 rounded-lg  mb-4">
+        <div className="w-fit p-2 flex space-x-2">
+          <div className="flex flex-col w-28 h-28 bg-blue-100 bg-opacity-80 rounded-lg p-2 items-center justify-center space-y-2">
+            <AccountModal
+              onAccountCreated={(_) => {
+                updateFamilyAccounts();
+              }}
+            />
+          </div>
+          {accounts.map((item) => (
+            <AccountCard
+              account={item}
+              onAccountUpdated={() => updateFamilyAccounts()}
+            />
+          ))}
         </div>
       </div>
       <div className="font-bold mb-1 text-lg">Records</div>
