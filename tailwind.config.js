@@ -15,6 +15,12 @@ module.exports = {
           lineHeight: "20px",
         },
       ],
+      lg: [
+        "20px",
+        {
+          lineHeight: "28px",
+        },
+      ],
       "2xl": [
         "24px",
         {

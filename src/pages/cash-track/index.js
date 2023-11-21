@@ -31,26 +31,30 @@ export default function CashTrackPage() {
 
   return (
     <div className="w-full h-full flex flex-col p-4">
-      <div className="w-full h-24 rounded-lg bg-blue-300 bg-opacity-80 flex items-center justify-between p-4">
+      <div className="w-full h-24 rounded-lg bg-blue-300 bg-opacity-80 flex items-center justify-between p-4 mb-4">
         <div className="text-2xl">Total CNY {totalBalance}</div>
         <div className="flex flex-col space-y-2">
           {userInfo.family_id === 0 && <FamilyModal />}
-          <AccountModal
-            onAccountCreated={(account) => {
-              updateFamilyAccounts();
-            }}
-          />
         </div>
       </div>
-      <div className="w-full rounded-lg bg-white bg-opacity-80 mt-4 p-2 flex space-x-2">
+      <div className="font-bold mb-1 text-lg">Accounts</div>
+      <div className="w-full rounded-lg bg-white bg-opacity-80 p-2 flex space-x-2 mb-4">
         {accounts.map((item) => (
           <AccountCard
             account={item}
             onAccountUpdated={() => updateFamilyAccounts()}
           />
         ))}
+        <div className="flex flex-col w-28 h-28 bg-blue-100 bg-opacity-80 rounded-lg p-2 items-center justify-center space-y-2">
+          <AccountModal
+            onAccountCreated={(_) => {
+              updateFamilyAccounts();
+            }}
+          />
+        </div>
       </div>
-      <div className="w-full h-full rounded-lg bg-white bg-opacity-80 mt-4">
+      <div className="font-bold mb-1 text-lg">Records</div>
+      <div className="w-full h-full rounded-lg bg-white bg-opacity-80">
         records
       </div>
     </div>

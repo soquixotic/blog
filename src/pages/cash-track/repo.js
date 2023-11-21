@@ -2,8 +2,13 @@ import { getUserToken } from "../../utils/user";
 
 export const CurrencyMap = {
   1: "CNY",
-  2: "HKG",
+  2: "HKD",
   3: "USD",
+};
+export const CurrencySymbol = {
+  1: "￥",
+  2: "HK$",
+  3: "$",
 };
 
 export async function fetchFamilyAccounts() {

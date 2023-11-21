@@ -4,19 +4,18 @@ import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
 // import style manually
 import "react-markdown-editor-lite/lib/index.css";
-import { Button, Flex, message, Input, Modal } from "antd";
+import { Button, Flex, message, Input } from "antd";
 import { useEffect } from "react";
-import { configUserData, getUserToken, getUserInfo } from "../../utils/user";
+import { getUserToken, getUserInfo } from "../../utils/user";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { createDraft, updateDraft, publishArticle, fetchArticle } from "./repo";
+
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 
 export default function AIEditorPage() {
   const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [openLogin, setOpenLogin] = useState(false);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [hasLoggedIn, setHasLoggedIn] = useState(getUserToken() !== "");
   const [article, setArticle] = useState({});
   const [params] = useSearchParams();
@@ -27,10 +26,6 @@ export default function AIEditorPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (openLogin === false) {
-      setUsername("");
-      setPassword("");
-    }
     const userInfo = getUserInfo();
     setHasLoggedIn(userInfo.id !== undefined);
     if (articleId && hasLoggedIn) {
@@ -55,36 +50,6 @@ export default function AIEditorPage() {
       setOpenLogin(true);
     }
   }, [hasLoggedIn]);
-
-  const trySignIn = () => {
-    const formData = { username: username, password: password };
-    var encodedData = Object.keys(formData)
-      .map(function (key) {
-        return (
-          encodeURIComponent(key) + "=" + encodeURIComponent(formData[key])
-        );
-      })
-      .join("&");
-    fetch("https://api.zymx.tech/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: encodedData,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.code === 0) {
-          configUserData(data.data);
-          setOpenLogin(false);
-          setHasLoggedIn(true);
-          messageApi.success("Signed in: " + data.data.user.username);
-          // navigate("/ai-editor");
-          return;
-        }
-        messageApi.error("Error: " + data.message);
-      });
-  };
 
   const handleEditorChange = useCallback(
     ({ _, text: newText }) => {
@@ -189,6 +154,7 @@ export default function AIEditorPage() {
           setArticle({ ...article });
         });
       }
+      messageApi.success("Save draft successfully!");
     } catch (error) {
       console.log(error);
     }
@@ -203,6 +169,7 @@ export default function AIEditorPage() {
         setArticle({ ...article });
         navigate("/article?id=" + articleId);
       });
+      messageApi.success("Publish successfully!");
     } catch (error) {
       console.log(error);
     }
@@ -272,40 +239,6 @@ export default function AIEditorPage() {
         renderHTML={(text) => mdParser.render(text)}
         onChange={handleEditorChange}
       />
-      <Modal
-        centered
-        open={openLogin}
-        okText={"Sign in"}
-        onCancel={() => {
-          navigate("/");
-          setOpenLogin(false);
-        }}
-        onOk={() => {
-          trySignIn();
-        }}
-      >
-        <Flex vertical className="space-y-4 pt-8">
-          <Flex className="space-x-4">
-            <p className="w-20">Username</p>
-            <Input
-              value={username}
-              onChange={(value) => {
-                setUsername(value.target.value);
-              }}
-            />
-          </Flex>
-          <Flex className="space-x-4">
-            <p className="w-20">Password</p>
-            <Input
-              type="password"
-              value={password}
-              onChange={(value) => {
-                setPassword(value.target.value);
-              }}
-            />
-          </Flex>
-        </Flex>
-      </Modal>
     </Flex>
   );
 }

@@ -72,7 +72,7 @@ export function AccountModal({ onAccountCreated, account }) {
           setOpen(true);
         }}
       >
-        {accountId === 0 ? "Add Account" : "Edit"}
+        {accountId === 0 ? "Add" : "Edit"}
       </Button>
       <Modal
         title={accountId === 0 ? "Create Account" : "Update Account"}
