@@ -6,13 +6,15 @@ import { Main } from "./main";
 import { withRouter } from "../../utils/router";
 import { useLocation } from "react-router-dom";
 import { useLoginModal } from "../../utils/user";
+import { useGlobalState } from "../../utils/globalState";
 
 const { Header, Content } = Layout;
 
 function Homepage() {
   const [selectedKeys, setSelectedKeys] = useState([]);
   const location = useLocation();
-  const [userInfo, setLoginOpen, modalHolder] = useLoginModal();
+  const [userInfo, modalHolder] = useLoginModal();
+  const { globalState, setGlobalState } = useGlobalState();
   useEffect(() => {
     setSelectedKeys([location.pathname]);
   }, [location]);
@@ -36,7 +38,7 @@ function Homepage() {
             className="bg-blue-400 text-white font-bold px-3 h-16 align-middle hover:cursor-pointer select-none"
             onClick={() => {
               if (!userInfo.username) {
-                setLoginOpen(true);
+                setGlobalState({ ...globalState, isLoginModalOpen: true });
               }
             }}
           >

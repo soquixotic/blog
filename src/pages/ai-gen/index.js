@@ -2,24 +2,20 @@ import { Input, Image, Button, Spin } from "antd";
 import { useState } from "react";
 import { genImage } from "./repo";
 import { timeFormat } from "../../utils/format";
+import { useLoginModalSwitch, useUserData } from "../../utils/user";
 
 export default function AIGen() {
   const [isLoading, setIsLoading] = useState(false);
   const [prompt, setPrompt] = useState("");
-  const [imageResults, setImageResults] = useState([
-    {
-      created: 1700559673,
-      data: [
-        {
-          url: "https://oaidalleapiprodscus.blob.core.windows.net/private/org-8XOMKH8jJoqyxuBJgLOuyfFr/user-xWXIZvP56ks42siQ0NWKI5pg/img-2Mxm9ubPUT86gi56MpOFBjnp.png?st=2023-11-21T08%3A41%3A13Z&se=2023-11-21T10%3A41%3A13Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-20T13%3A36%3A19Z&ske=2023-11-21T13%3A36%3A19Z&sks=b&skv=2021-08-06&sig=3WTQWMnXi7G6rqWX9MMgkY9v3KCPA3iy/SPQ4DspkvI%3D",
-          revised_prompt:
-            "A girl with silver hair is standing in a grassy meadow. She is wearing a red dress and holding a black camera in her hands.",
-        },
-      ],
-    },
-  ]);
+  const [openLoginModal] = useLoginModalSwitch();
+  const userData = useUserData();
+  const [imageResults, setImageResults] = useState([]);
 
   const onGenImage = () => {
+    if (!userData.token) {
+      openLoginModal();
+      return;
+    }
     setIsLoading(true);
     genImage(prompt)
       .then((resp) => {
@@ -33,7 +29,7 @@ export default function AIGen() {
   };
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="p-4 space-y-4 pb-24">
       <div className="text-base font-bold">Prompt:</div>
       <Input.TextArea
         rows={3}
@@ -51,18 +47,38 @@ export default function AIGen() {
         Gen!
       </Button>
       <div className="text-base font-bold">Result:</div>
-      {isLoading && <Spin />}
+      <div className="flex space-x-2">
+        {isLoading && (
+          <div className="w-28 h-28 flex items-center justify-center bg-white bg-opacity-70 rounded-lg">
+            <Spin />
+          </div>
+        )}
+        {imageResults.map((item) => {
+          const imageInfo = item.data[0];
+          const url = imageInfo.url;
+          return (
+            <div className="w-28 h-28 rounded-lg" key={url}>
+              <Image src={url} />
+            </div>
+          );
+        })}
+      </div>
+
       <div>
         {imageResults.map((item) => {
           const imageInfo = item.data[0];
           const url = imageInfo.url;
           return (
-            <div key={url}>
+            <div key={url} className="bg-white bg-opacity-90 rounded-lg p-4">
               <div className="font-bold mb-2">{timeFormat(item.created)}</div>
-              <div className="mb-2 bg-gray-300 rounded-lg p-2 bg-opacity-75">
+              <div className="mb-2 bg-gray-300 rounded-lg p-2 bg-opacity-50">
                 {imageInfo.revised_prompt}
               </div>
-              <Image src={url} />
+              <img
+                src={url}
+                alt={imageInfo.revised_prompt}
+                className="w-full h-full"
+              />
             </div>
           );
         })}

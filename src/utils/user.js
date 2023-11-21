@@ -1,5 +1,6 @@
 import { Modal, Flex, Input, message } from "antd";
 import { useState } from "react";
+import { useGlobalState } from "./globalState";
 
 var userData = {};
 
@@ -15,12 +16,29 @@ export function getUserInfo() {
   return userData.user ?? {};
 }
 
+export function useLoginModalSwitch() {
+  const { globalState, setGlobalState } = useGlobalState();
+  const openLoginModal = () => {
+    setGlobalState({ ...globalState, isLoginModalOpen: true });
+  };
+  const closeLoginModal = () => {
+    setGlobalState({ ...globalState, isLoginModalOpen: false });
+  };
+  return [openLoginModal, closeLoginModal];
+}
+
+export function useUserData() {
+  const { globalState } = useGlobalState();
+  const userData = globalState.userData;
+  return userData;
+}
+
 export function useLoginModal() {
   const [userInfo, setUserInfo] = useState(getUserInfo());
-  const [isOpen, setIsOpen] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [messageApi, contextHolder] = message.useMessage();
+  const { globalState, setGlobalState } = useGlobalState();
 
   const trySignIn = () => {
     const formData = { username: username, password: password };
@@ -42,7 +60,9 @@ export function useLoginModal() {
       .then((data) => {
         if (data.code === 0) {
           configUserData(data.data);
-          setIsOpen(false);
+          globalState.isLoginModalOpen = false;
+          globalState.userData = data.data;
+          setGlobalState({ ...globalState });
           setUserInfo(data.data.user);
           messageApi.success("Signed in: " + data.data.user.username);
           // navigate("/ai-editor");
@@ -54,11 +74,11 @@ export function useLoginModal() {
 
   return [
     userInfo,
-    setIsOpen,
     <Modal
-      open={isOpen}
+      open={globalState.isLoginModalOpen}
       onCancel={() => {
-        setIsOpen(false);
+        globalState.isLoginModalOpen = false;
+        setGlobalState({ ...globalState });
       }}
       onOk={() => {
         trySignIn();

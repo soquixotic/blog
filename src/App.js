@@ -1,10 +1,13 @@
 import "./App.css";
 import Homepage from "./pages/home";
+import { GlobalStateProvider } from "./utils/globalState";
 
 function App() {
   return (
     <div>
-      <Homepage />
+      <GlobalStateProvider>
+        <Homepage />
+      </GlobalStateProvider>
     </div>
   );
 }
