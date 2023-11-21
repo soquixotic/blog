@@ -30,11 +30,16 @@ export default function AIGen() {
 
   return (
     <div className="p-4 space-y-4 pb-24">
+      <div className="font-bold text-red-500 p-2 bg-red-50 bg-opacity-80 rounded-lg">
+        Careful!!! <br />
+        Once you refresh the page, you're unable to find back the images. Make
+        sure save the images you like before you leave.
+      </div>
       <div className="text-base font-bold">Prompt:</div>
       <Input.TextArea
         rows={3}
         value={prompt}
-        placeholder="Input your prompt here. You have to input 20 characters at least. "
+        placeholder="Input your prompt here. You have to input 10 characters at least. "
         onChange={(e) => setPrompt(e.target.value)}
         disabled={isLoading}
       />
@@ -42,7 +47,7 @@ export default function AIGen() {
         type="primary"
         loading={isLoading}
         onClick={onGenImage}
-        disabled={prompt.length < 20}
+        disabled={prompt.length < 10}
       >
         Gen!
       </Button>
