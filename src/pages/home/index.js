@@ -31,7 +31,7 @@ function Homepage() {
           style={{ padding: "0", minWidth: "375px", maxWidth: "750px" }}
           className="flex justify-center fixed w-full z-10 bg-gray-50 bg-opacity-0 items-center"
         >
-          <div style={{ minWidth: "375px" }} className="w-full bg-opacity-0">
+          <div style={{}} className="w-full bg-opacity-0">
             <TopMenu selectedKeys={selectedKeys} className="w-full" />
           </div>
           <div
