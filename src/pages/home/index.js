@@ -54,7 +54,7 @@ function Homepage() {
           >
             <div
               style={{ maxWidth: "750px", minWidth: "375px" }}
-              className="w-full bg-white bg-opacity-50"
+              className="w-full bg-white bg-opacity-50 overflow-auto"
             >
               <Main style={{ overflow: "auto" }} />
             </div>

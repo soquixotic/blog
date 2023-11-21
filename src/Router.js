@@ -1,6 +1,7 @@
 import { Component } from "react";
 
 const AsyncArticleList = asyncComponent(() => import("./pages/article-list"));
+const AsyncAIGen = asyncComponent(() => import("./pages/ai-gen"));
 const AsyncAIEditorPage = asyncComponent(() => import("./pages/ai-editor"));
 const AsyncCaboEntryPage = asyncComponent(() => import("./pages/cabo"));
 const AsyncCaboScoreBoardPage = asyncComponent(() =>
@@ -17,6 +18,12 @@ export const RouteMenuList = [
     name: "📚 Home",
     path: "/",
     component: <AsyncArticleList></AsyncArticleList>,
+  },
+  {
+    key: "ai-gen",
+    name: "🎨 AI Paint",
+    path: "/ai-gen",
+    component: <AsyncAIGen />,
   },
   {
     key: "cabo",
