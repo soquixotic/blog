@@ -69,6 +69,8 @@ export function useLoginModal() {
           return;
         }
         messageApi.error("Error: " + data.message);
+      }).catch(err => {
+        messageApi.error("Error: " + err);
       });
   };
 

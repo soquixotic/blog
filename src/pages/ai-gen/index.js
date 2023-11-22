@@ -23,6 +23,9 @@ export default function AIGen() {
           setImageResults([resp.data, ...imageResults]);
         }
       })
+      .catch((err) => {
+        console.log("failed to gen image. ", err);
+      })
       .finally(() => {
         setIsLoading(false);
       });
@@ -58,11 +61,12 @@ export default function AIGen() {
             <Spin />
           </div>
         )}
-        {imageResults.map((item) => {
+        {imageResults.map((item, index) => {
           const imageInfo = item.data[0];
-          const url = imageInfo.url;
+          const url =
+            imageInfo.url ?? `data:image/png;base64,${imageInfo.b64_json}`;
           return (
-            <div className="w-28 h-28 rounded-lg" key={url}>
+            <div className="w-28 h-28 rounded-lg" key={index}>
               <Image src={url} />
             </div>
           );
@@ -70,11 +74,12 @@ export default function AIGen() {
       </div>
 
       <div>
-        {imageResults.map((item) => {
+        {imageResults.map((item, index) => {
           const imageInfo = item.data[0];
-          const url = imageInfo.url;
+          const url =
+            imageInfo.url ?? `data:image/png;base64,${imageInfo.b64_json}`;
           return (
-            <div key={url} className="bg-white bg-opacity-90 rounded-lg p-4">
+            <div key={index} className="bg-white bg-opacity-90 rounded-lg p-4">
               <div className="font-bold mb-2">{timeFormat(item.created)}</div>
               <div className="mb-2 bg-gray-300 rounded-lg p-2 bg-opacity-50">
                 {imageInfo.revised_prompt}
