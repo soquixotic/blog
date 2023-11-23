@@ -38,6 +38,25 @@ export async function fetchArticle(id) {
   return result;
 }
 
+export async function uploadImage(file) {
+  const formData = new FormData();
+
+  console.log(file);
+
+  // 将文件添加到 FormData
+  formData.append("image", file);
+
+  // 发送 POST 请求
+  const resp = await fetch("http://api.zymx.tech/upload/image", {
+    method: "POST",
+    headers: {
+      Authorization: getUserToken(),
+    },
+    body: formData,
+  });
+  const data = await resp.json();
+  return data;
+}
 
 async function fetchWithAuth(url, bodyJson) {
   return await fetch(url, {
@@ -49,3 +68,4 @@ async function fetchWithAuth(url, bodyJson) {
     body: JSON.stringify(bodyJson),
   });
 }
+

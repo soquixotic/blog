@@ -8,7 +8,13 @@ import { Button, Flex, message, Input } from "antd";
 import { useEffect } from "react";
 import { getUserToken, getUserInfo } from "../../utils/user";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { createDraft, updateDraft, publishArticle, fetchArticle } from "./repo";
+import {
+  createDraft,
+  updateDraft,
+  publishArticle,
+  fetchArticle,
+  uploadImage,
+} from "./repo";
 
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 
@@ -176,6 +182,19 @@ export default function AIEditorPage() {
     setIsLoading(false);
   }
 
+  const handleImageUpload = (file, callback) => {
+    uploadImage(file)
+      .then((resp) => {
+        console.log(resp);
+        if (resp.code === 0) {
+          callback(resp.data.url);
+        }
+      })
+      .catch(() => {
+        messageApi.error("Failed to upload image");
+      });
+  };
+
   return (
     <Flex vertical className="w-full h-full p-4 min-h-screen">
       {contextHolder}
@@ -238,6 +257,7 @@ export default function AIEditorPage() {
         value={content}
         renderHTML={(text) => mdParser.render(text)}
         onChange={handleEditorChange}
+        onImageUpload={handleImageUpload}
       />
     </Flex>
   );

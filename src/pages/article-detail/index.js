@@ -64,6 +64,7 @@ export default function ArticleDetailPage() {
       </div>
 
       <div
+        className="overflow-hidden"
         dangerouslySetInnerHTML={{
           __html: mdParser.render(article.content ?? ""),
         }}
