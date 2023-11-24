@@ -1,4 +1,4 @@
-import { Input, Image, Button, Spin } from "antd";
+import { Input, Image, Button, Spin, message } from "antd";
 import { useState } from "react";
 import { genImage } from "./repo";
 import { timeFormat } from "../../utils/format";
@@ -10,6 +10,7 @@ export default function AIGen() {
   const [openLoginModal] = useLoginModalSwitch();
   const userData = useUserData();
   const [imageResults, setImageResults] = useState([]);
+  const [messageApi, contextHolder] = message.useMessage();
 
   const onGenImage = () => {
     if (!userData.token) {
@@ -21,10 +22,13 @@ export default function AIGen() {
       .then((resp) => {
         if (resp.code === 0) {
           setImageResults([resp.data, ...imageResults]);
+        } else {
+          messageApi.error(resp.message);
         }
       })
       .catch((err) => {
         console.log("failed to gen image. ", err);
+        messageApi.error("Failed to gen image.");
       })
       .finally(() => {
         setIsLoading(false);
@@ -33,6 +37,7 @@ export default function AIGen() {
 
   return (
     <div className="p-4 space-y-4 pb-24">
+      {contextHolder}
       <div className="font-bold text-red-500 p-2 bg-red-50 bg-opacity-80 rounded-lg">
         Careful!!! <br />
         Once you refresh the page, you're unable to find back the images. Make
@@ -55,22 +60,26 @@ export default function AIGen() {
         Gen!
       </Button>
       <div className="text-base font-bold">Result:</div>
-      <div className="flex space-x-2">
-        {isLoading && (
-          <div className="w-28 h-28 flex items-center justify-center bg-white bg-opacity-70 rounded-lg">
-            <Spin />
+      <div className="w-full overflow-auto">
+        <div className="w-fit">
+          <div className="flex space-x-2">
+            {isLoading && (
+              <div className="w-28 h-28 flex items-center justify-center bg-white bg-opacity-70 rounded-lg">
+                <Spin />
+              </div>
+            )}
+            {imageResults.map((item, index) => {
+              const imageInfo = item.data[0];
+              const url =
+                imageInfo.url ?? `data:image/png;base64,${imageInfo.b64_json}`;
+              return (
+                <div className="w-28 h-28 rounded-lg" key={index}>
+                  <Image src={url} />
+                </div>
+              );
+            })}
           </div>
-        )}
-        {imageResults.map((item, index) => {
-          const imageInfo = item.data[0];
-          const url =
-            imageInfo.url ?? `data:image/png;base64,${imageInfo.b64_json}`;
-          return (
-            <div className="w-28 h-28 rounded-lg" key={index}>
-              <Image src={url} />
-            </div>
-          );
-        })}
+        </div>
       </div>
 
       <div>
