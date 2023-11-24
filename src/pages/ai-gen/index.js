@@ -1,6 +1,6 @@
 import { Input, Image, Button, Spin, message } from "antd";
 import { useState } from "react";
-import { genImage } from "./repo";
+import { genImage, writeMore } from "./repo";
 import { timeFormat } from "../../utils/format";
 import { useLoginModalSwitch, useUserData } from "../../utils/user";
 
@@ -35,6 +35,22 @@ export default function AIGen() {
       });
   };
 
+  const onAIWrite = () => {
+    setIsLoading(true);
+    writeMore(
+      prompt,
+      (newPrompt) => {
+        setPrompt(newPrompt);
+      },
+      () => {
+        setIsLoading(false);
+      },
+      () => {
+        messageApi.error("Failed to AI write");
+      }
+    );
+  };
+
   return (
     <div className="p-4 space-y-4 pb-24">
       {contextHolder}
@@ -45,20 +61,30 @@ export default function AIGen() {
       </div>
       <div className="text-base font-bold">Prompt:</div>
       <Input.TextArea
-        rows={3}
+        rows={4}
         value={prompt}
         placeholder="Input your prompt here. You have to input 10 characters at least. "
         onChange={(e) => setPrompt(e.target.value)}
         disabled={isLoading}
       />
-      <Button
-        type="primary"
-        loading={isLoading}
-        onClick={onGenImage}
-        disabled={prompt.length < 10}
-      >
-        Gen!
-      </Button>
+      <div className="flex space-x-2">
+        <Button
+          type="primary"
+          loading={isLoading}
+          onClick={onGenImage}
+          disabled={prompt.length < 10}
+        >
+          Gen!
+        </Button>
+        <Button
+          type="default"
+          loading={isLoading}
+          onClick={onAIWrite}
+          disabled={prompt.length < 1}
+        >
+          AI Write
+        </Button>
+      </div>
       <div className="text-base font-bold">Result:</div>
       <div className="w-full overflow-auto">
         <div className="w-fit">
