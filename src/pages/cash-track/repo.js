@@ -16,6 +16,19 @@ export async function fetchFamilyAccounts() {
   return await result.json();
 }
 
+export async function fetchFamilyCategories() {
+  const result = await getWithAuth("https://api.zymx.tech/family/categories");
+  return await result.json();
+}
+
+export async function fetchFamilyRecords() {
+  const now = new Date();
+  const result = await getJsonWithAuth("https://api.zymx.tech/family/records", {
+    time_range: { start_at: 123, end_at: now.getTime() },
+  });
+  return await result.json();
+}
+
 export async function createAccount(account) {
   const result = await postWithAuth(
     "https://api.zymx.tech/account/create",
@@ -32,6 +45,29 @@ export async function updateAccount(account) {
   return await result.json();
 }
 
+export async function deleteCategory(id) {
+  const result = await postWithAuth("https://api.zymx.tech/category/delete", {
+    id: id,
+  });
+  return await result.json();
+}
+
+export async function createCategory(name) {
+  const result = await postWithAuth("https://api.zymx.tech/category/create", {
+    name: name,
+    type: 1,
+  });
+  return await result.json();
+}
+
+export async function createRecord(record) {
+  const result = await postWithAuth(
+    "https://api.zymx.tech/record/create",
+    record
+  );
+  return await result.json();
+}
+
 export async function createFamily(family) {
   const result = await postWithAuth(
     "https://api.zymx.tech/family/create",
@@ -42,6 +78,29 @@ export async function createFamily(family) {
 
 async function getWithAuth(url) {
   return await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: getUserToken(),
+    },
+  });
+}
+
+async function getJsonWithAuth(url, bodyJson) {
+  var params = new URLSearchParams();
+  for (let key in bodyJson) {
+    if (typeof bodyJson[key] === "object") {
+      for (let nestedKey in bodyJson[key]) {
+        params.append(key + "[" + nestedKey + "]", bodyJson[key][nestedKey]);
+      }
+    } else {
+      params.append(key, bodyJson[key]);
+    }
+  }
+
+  var queryString = params.toString();
+
+  return await fetch(`${url}?${queryString}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -65,3 +124,14 @@ async function postWithAuth(url, bodyJson) {
     body: encodedData,
   });
 }
+
+// async function postJsonWithAuth(url, bodyJson) {
+//   return await fetch(url, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//       Authorization: getUserToken(),
+//     },
+//     body: JSON.stringify(bodyJson),
+//   });
+// }

@@ -85,6 +85,7 @@ export function useLoginModal() {
       onOk={() => {
         trySignIn();
       }}
+      centered
     >
       {contextHolder}
       <Flex vertical className="space-y-4 pt-8">

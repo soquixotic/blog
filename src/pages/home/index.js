@@ -7,6 +7,8 @@ import { withRouter } from "../../utils/router";
 import { useLocation } from "react-router-dom";
 import { useLoginModal } from "../../utils/user";
 import { useGlobalState } from "../../utils/globalState";
+import { message } from "antd";
+import { configMessageApi } from "../../utils/common";
 
 const { Header, Content } = Layout;
 
@@ -15,9 +17,14 @@ function Homepage() {
   const location = useLocation();
   const [userInfo, modalHolder] = useLoginModal();
   const { globalState, setGlobalState } = useGlobalState();
+  const [messageApi, contextHolder] = message.useMessage();
   useEffect(() => {
     setSelectedKeys([location.pathname]);
   }, [location]);
+
+  useEffect(() => {
+    configMessageApi(messageApi);
+  }, [messageApi]);
 
   return (
     <Flex
@@ -25,6 +32,7 @@ function Homepage() {
       vertical
       style={{ minWidth: "375px" }}
     >
+      {contextHolder}
       {modalHolder}
       <Layout style={{ minHeight: "100vh" }} className="w-full items-center">
         <Header

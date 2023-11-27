@@ -80,6 +80,7 @@ export function AccountModal({ onAccountCreated, account }) {
         onCancel={() => setOpen(false)}
         onOk={onCreateAccount}
         confirmLoading={isLoading}
+        centered
       >
         <div className="flex flex-col mt-5 space-y-2">
           <div className="flex justify-between items-center">

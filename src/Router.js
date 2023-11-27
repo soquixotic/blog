@@ -10,7 +10,7 @@ const AsyncCaboScoreBoardPage = asyncComponent(() =>
 const AsyncArticleDetailPage = asyncComponent(() =>
   import("./pages/article-detail")
 );
-const AsyncCashTrackPage = asyncComponent(() => import("./pages/cash-track"));
+// const AsyncCashTrackPage = asyncComponent(() => import("./pages/cash-track"));
 
 export const RouteMenuList = [
   {
@@ -36,12 +36,6 @@ export const RouteMenuList = [
     name: "🤖 AI Editor",
     path: "/ai-editor",
     component: <AsyncAIEditorPage />,
-  },
-  {
-    key: "cash-track",
-    name: "💰Cash Tracker",
-    path: "/cash-track",
-    component: <AsyncCashTrackPage />,
   },
 ];
 
